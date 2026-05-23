@@ -6,6 +6,7 @@ import styles from "./page.module.css";
 
 const REFERENCE_TEXT = "Cho em một suất bún chả nhé";
 const REFERENCE_WORDS = REFERENCE_TEXT.split(/\s+/);
+const DEFAULT_RECORDING_MIME = "audio/webm";
 
 type WordMark = "none" | "omission" | "mispronunciation";
 
@@ -197,7 +198,7 @@ export default function Home() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
-  const recorderMimeTypeRef = useRef("audio/webm");
+  const recorderMimeTypeRef = useRef(DEFAULT_RECORDING_MIME);
 
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
@@ -251,9 +252,13 @@ export default function Home() {
       resetRecording();
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
-      const mediaRecorder = new MediaRecorder(stream);
+      const preferredTypes = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4"];
+      const supportedMimeType = preferredTypes.find((type) => MediaRecorder.isTypeSupported(type));
+      const mediaRecorder = supportedMimeType
+        ? new MediaRecorder(stream, { mimeType: supportedMimeType })
+        : new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
-      recorderMimeTypeRef.current = mediaRecorder.mimeType || "audio/webm";
+      recorderMimeTypeRef.current = mediaRecorder.mimeType || supportedMimeType || DEFAULT_RECORDING_MIME;
       audioChunksRef.current = [];
 
       mediaRecorder.ondataavailable = (event) => {
@@ -278,6 +283,10 @@ export default function Home() {
         }
         if (error.name === "NotFoundError") {
           setErrorMessage("No microphone was detected on this device.");
+          return;
+        }
+        if (error.name === "NotReadableError") {
+          setErrorMessage("Microphone is currently in use by another application.");
           return;
         }
       }
