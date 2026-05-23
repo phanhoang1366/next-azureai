@@ -1,0 +1,86 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: #f5f7fb;
+}
+
+.card {
+  width: min(760px, 100%);
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.subtitle {
+  color: #4b5563;
+}
+
+.referenceSentence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  line-height: 1.6;
+}
+
+.word {
+  font-size: 1.1rem;
+}
+
+.omission {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-decoration-color: #ef4444;
+}
+
+.mispronunciation {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-decoration-color: #f97316;
+}
+
+.insertionLine {
+  display: inline-block;
+  width: 1.5rem;
+  border-top: 2px solid #2563eb;
+  align-self: center;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.button {
+  border: 1px solid #d1d5db;
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.55rem 0.9rem;
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.audioPlayer {
+  width: 100%;
+}
+
+.error {
+  color: #b91c1c;
+}
+
+.scores {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1rem;
+  display: grid;
+  gap: 0.25rem;
+}
