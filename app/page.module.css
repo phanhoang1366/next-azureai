@@ -1,4 +1,8 @@
 .page {
+  --omission-color: #c4c6cd;
+  --mispronunciation-color: #ba1a1a;
+  --insertion-color: #243f67;
+  --insertion-marker-width: 2px;
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -33,7 +37,7 @@
 }
 
 .omission {
-  color: #c4c6cd;
+  color: var(--omission-color);
   text-decoration: line-through;
   text-decoration-thickness: 2px;
 }
@@ -41,14 +45,14 @@
 .mispronunciation {
   text-decoration: underline;
   text-decoration-thickness: 2px;
-  text-decoration-color: #ba1a1a;
+  text-decoration-color: var(--mispronunciation-color);
 }
 
 .insertionLine {
   display: inline-block;
-  width: 2px;
+  width: var(--insertion-marker-width);
   height: 1rem;
-  background: #243f67;
+  background: var(--insertion-color);
   align-self: center;
 }
 
@@ -64,14 +68,14 @@
 }
 
 .noteOmission {
-  color: #c4c6cd;
+  color: var(--omission-color);
   text-decoration: line-through;
 }
 
 .noteMispronunciation {
   text-decoration: underline;
   text-decoration-thickness: 2px;
-  text-decoration-color: #ba1a1a;
+  text-decoration-color: var(--mispronunciation-color);
 }
 
 .noteInsertion {
@@ -84,9 +88,9 @@
 .noteInsertion::before {
   content: "";
   display: inline-block;
-  width: 2px;
+  width: var(--insertion-marker-width);
   height: 0.8rem;
-  background: #243f67;
+  background: var(--insertion-color);
 }
 
 .actions {
