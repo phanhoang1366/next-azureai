@@ -1,0 +1,128 @@
+.page {
+  --omission-color: #c4c6cd;
+  --mispronunciation-color: #ba1a1a;
+  --insertion-color: #243f67;
+  --insertion-marker-width: 2px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: #f5f7fb;
+}
+
+.card {
+  width: min(760px, 100%);
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.subtitle {
+  color: #4b5563;
+}
+
+.referenceSentence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  line-height: 1.6;
+}
+
+.word {
+  font-size: 1.1rem;
+}
+
+.omission {
+  color: var(--omission-color);
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+.mispronunciation {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-decoration-color: var(--mispronunciation-color);
+}
+
+.insertionLine {
+  display: inline-block;
+  width: var(--insertion-marker-width);
+  height: 1rem;
+  background: var(--insertion-color);
+  align-self: center;
+}
+
+.notes {
+  display: grid;
+  gap: 0.5rem;
+  color: #4b5563;
+  font-size: 0.95rem;
+}
+
+.noteLabel {
+  font-weight: 600;
+}
+
+.noteOmission {
+  color: var(--omission-color);
+  text-decoration: line-through;
+}
+
+.noteMispronunciation {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-decoration-color: var(--mispronunciation-color);
+}
+
+.noteInsertion {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.noteInsertion::before {
+  content: "";
+  display: inline-block;
+  width: var(--insertion-marker-width);
+  height: 0.8rem;
+  background: var(--insertion-color);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.button {
+  border: 1px solid #d1d5db;
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.55rem 0.9rem;
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.audioPlayer {
+  width: 100%;
+}
+
+.error {
+  color: #b91c1c;
+}
+
+.scores {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1rem;
+  display: grid;
+  gap: 0.25rem;
+}
