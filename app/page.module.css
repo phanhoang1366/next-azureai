@@ -35,7 +35,7 @@
 .omission {
   text-decoration: underline;
   text-decoration-thickness: 2px;
-  text-decoration-color: #ef4444;
+  text-decoration-color: #2563eb;
 }
 
 .mispronunciation {
@@ -46,8 +46,9 @@
 
 .insertionLine {
   display: inline-block;
-  width: 1.5rem;
-  border-top: 2px solid #2563eb;
+  width: 2px;
+  height: 1rem;
+  background: #2563eb;
   align-self: center;
 }
 
