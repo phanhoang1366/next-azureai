@@ -197,6 +197,7 @@ export default function Home() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  const recorderMimeTypeRef = useRef("audio/webm");
 
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
@@ -252,6 +253,7 @@ export default function Home() {
       streamRef.current = stream;
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
+      recorderMimeTypeRef.current = mediaRecorder.mimeType || "audio/webm";
       audioChunksRef.current = [];
 
       mediaRecorder.ondataavailable = (event) => {
@@ -261,15 +263,29 @@ export default function Home() {
       };
 
       mediaRecorder.onstop = () => {
-        const blob = new Blob(audioChunksRef.current, { type: mediaRecorder.mimeType || "audio/webm" });
+        const blob = new Blob(audioChunksRef.current, { type: recorderMimeTypeRef.current });
         setRecordedBlob(blob);
         setAudioUrl(URL.createObjectURL(blob));
       };
 
       mediaRecorder.start();
       setIsRecording(true);
-    } catch {
-      setErrorMessage("Microphone access is required to record audio.");
+    } catch (error) {
+      if (error instanceof DOMException) {
+        if (error.name === "NotAllowedError") {
+          setErrorMessage("Microphone permission was denied. Please allow access and try again.");
+          return;
+        }
+        if (error.name === "NotFoundError") {
+          setErrorMessage("No microphone was detected on this device.");
+          return;
+        }
+      }
+      setErrorMessage(
+        error instanceof Error
+          ? `Unable to start recording: ${error.message}`
+          : "Unable to start recording.",
+      );
     }
   };
 
@@ -297,7 +313,16 @@ export default function Home() {
       recognizer.close();
 
       if (result.reason !== SpeechSDK.ResultReason.RecognizedSpeech) {
-        throw new Error("Speech was not recognized. Please try speaking clearly and submit again.");
+        if (result.reason === SpeechSDK.ResultReason.NoMatch) {
+          throw new Error("No recognizable speech was detected. Please try again.");
+        }
+        if (result.reason === SpeechSDK.ResultReason.Canceled) {
+          const cancellation = SpeechSDK.CancellationDetails.fromResult(result);
+          throw new Error(
+            `Speech recognition canceled: ${cancellation.errorDetails || cancellation.reason.toString()}`,
+          );
+        }
+        throw new Error(`Speech recognition failed with reason: ${result.reason}`);
       }
 
       const jsonResult = result.properties.getProperty(SpeechSDK.PropertyId.SpeechServiceResponse_JsonResult);
@@ -355,7 +380,11 @@ export default function Home() {
             onClick={() => {
               if (audioUrl) {
                 const audio = new Audio(audioUrl);
-                audio.play().catch(() => setErrorMessage("Playback failed. Please try again."));
+                audio.play().catch((error) =>
+                  setErrorMessage(
+                    error instanceof Error ? `Playback failed: ${error.message}` : "Playback failed.",
+                  ),
+                );
               }
             }}
             disabled={!audioUrl || isRecording}
