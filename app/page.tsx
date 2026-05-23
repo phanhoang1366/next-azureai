@@ -210,6 +210,9 @@ export default function Home() {
     words: REFERENCE_WORDS.map((word) => ({ word, mark: "none" })),
     insertionsBeforeWord: new Array(REFERENCE_WORDS.length + 1).fill(0),
   });
+  const hasOmission = assessmentView.words.some((word) => word.mark === "omission");
+  const hasMispronunciation = assessmentView.words.some((word) => word.mark === "mispronunciation");
+  const hasInsertion = assessmentView.insertionsBeforeWord.some((count) => count > 0);
 
   useEffect(() => {
     return () => {
@@ -379,6 +382,30 @@ export default function Home() {
             <span className={styles.insertionLine} aria-label="insertion marker" />
           ) : null}
         </div>
+        {hasOmission || hasMispronunciation || hasInsertion ? (
+          <div className={styles.notes}>
+            {hasOmission ? (
+              <p>
+                <span className={`${styles.noteLabel} ${styles.noteOmission}`}>Omission</span>: crossed-out
+                word
+              </p>
+            ) : null}
+            {hasMispronunciation ? (
+              <p>
+                <span className={`${styles.noteLabel} ${styles.noteMispronunciation}`}>
+                  Mispronunciation
+                </span>
+                : red underline
+              </p>
+            ) : null}
+            {hasInsertion ? (
+              <p>
+                <span className={`${styles.noteLabel} ${styles.noteInsertion}`}>Insertion</span>: vertical
+                marker
+              </p>
+            ) : null}
+          </div>
+        ) : null}
 
         <div className={styles.actions}>
           <button type="button" onClick={handleRecord} className={styles.button}>
